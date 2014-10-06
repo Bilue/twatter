@@ -5,7 +5,7 @@ Some terrible code... Please fix me.
 
 There's a number of issues in this code base.
 
-Please fork, fix and submit a pull request.
+Please fork, branch, fix and submit a pull request.
 
 ####Issues:
 - Doesn't Compile

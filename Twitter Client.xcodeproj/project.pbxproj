@@ -15,6 +15,8 @@
 		54892C0519D8D92300EDC88E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54892C0419D8D92300EDC88E /* Images.xcassets */; };
 		54892C0819D8D92300EDC88E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54892C0619D8D92300EDC88E /* LaunchScreen.xib */; };
 		54892C1419D8D92300EDC88E /* Twitter_ClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 54892C1319D8D92300EDC88E /* Twitter_ClientTests.m */; };
+		54ECF08E19E23C68002B01B6 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54ECF08D19E23C68002B01B6 /* Social.framework */; };
+		54ECF09119E23D0E002B01B6 /* Tweet.m in Sources */ = {isa = PBXBuildFile; fileRef = 54ECF09019E23D0E002B01B6 /* Tweet.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +45,9 @@
 		54892C0D19D8D92300EDC88E /* Twitter ClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Twitter ClientTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		54892C1219D8D92300EDC88E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		54892C1319D8D92300EDC88E /* Twitter_ClientTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Twitter_ClientTests.m; sourceTree = "<group>"; };
+		54ECF08D19E23C68002B01B6 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		54ECF08F19E23D0E002B01B6 /* Tweet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tweet.h; sourceTree = "<group>"; };
+		54ECF09019E23D0E002B01B6 /* Tweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tweet.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54ECF08E19E23C68002B01B6 /* Social.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +72,7 @@
 		54892BE819D8D92200EDC88E = {
 			isa = PBXGroup;
 			children = (
+				54ECF08D19E23C68002B01B6 /* Social.framework */,
 				54892BF319D8D92300EDC88E /* Twitter Client */,
 				54892C1019D8D92300EDC88E /* Twitter ClientTests */,
 				54892BF219D8D92300EDC88E /* Products */,
@@ -94,6 +101,8 @@
 				54892C0419D8D92300EDC88E /* Images.xcassets */,
 				54892C0619D8D92300EDC88E /* LaunchScreen.xib */,
 				54892BF419D8D92300EDC88E /* Supporting Files */,
+				54ECF08F19E23D0E002B01B6 /* Tweet.h */,
+				54ECF09019E23D0E002B01B6 /* Tweet.m */,
 			);
 			path = "Twitter Client";
 			sourceTree = "<group>";
@@ -226,6 +235,7 @@
 			files = (
 				54892BFA19D8D92300EDC88E /* AppDelegate.m in Sources */,
 				54892BFD19D8D92300EDC88E /* MasterViewController.m in Sources */,
+				54ECF09119E23D0E002B01B6 /* Tweet.m in Sources */,
 				54892BF719D8D92300EDC88E /* main.m in Sources */,
 				54892C0019D8D92300EDC88E /* DetailViewController.m in Sources */,
 			);
@@ -420,6 +430,7 @@
 				54892C1919D8D92300EDC88E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		54892C1A19D8D92300EDC88E /* Build configuration list for PBXNativeTarget "Twitter ClientTests" */ = {
 			isa = XCConfigurationList;
@@ -428,6 +439,7 @@
 				54892C1C19D8D92300EDC88E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

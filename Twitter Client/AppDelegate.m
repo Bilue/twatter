@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "DetailViewController.h"
+#import <Social/Social.h>
 
 @interface AppDelegate () <UISplitViewControllerDelegate>
 

@@ -12,6 +12,7 @@ Please fork, fix and submit a pull request.
 - Seems to take a long time to fetch from twitter
 - MBProgress HUD doesn't disappear
 - TableView doesn't seem to refresh till after a scroll
+- We'd love to see pull to refresh
 
 
 ####What we're looking for:

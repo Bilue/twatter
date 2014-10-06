@@ -8,16 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "Tweet.h"
 
 @interface Twitter_ClientTests : XCTestCase
-
+@property NSDictionary* tweetDict;
 @end
 
 @implementation Twitter_ClientTests
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    _tweetDict = @{@"user" : @{@"screen_name" : @"@TonyBalony"}, @"text" : @"Blag blag blag", @"created_at" : @"Thu Oct 02 08:26:48 +0000 2014"};
 }
 
 - (void)tearDown {
@@ -25,16 +26,32 @@
     [super tearDown];
 }
 
-- (void)testExample {
+- (void)testTweet {
     // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
+    XCTAssert([[Tweet alloc] init] != nil, @"Pass");
 }
 
-- (void)testPerformanceExample {
-    // This is an example of a performance test case.
-    [self measureBlock:^{
-        // Put the code you want to measure the time of here.
-    }];
+- (void)testTweetMessage {
+    XCTAssert([[[Tweet alloc] initWithTweet:_tweetDict].message isEqualToString:@"Blag blag blag"], @"Pass");
+}
+
+- (void)testTweetTime {
+    Tweet *tweet = [[Tweet alloc] initWithTweet:_tweetDict];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"EEE MMM dd HH:mm:ss ZZZ yyyy"];
+    NSDate *date = [dateFormatter dateFromString:@"Thu Oct 02 08:26:48 +0000 2014"];
+    NSLog(@"%@", date);
+    
+    XCTAssert([tweet.date isEqualToDate:date], @"Pass");
+}
+
+- (void)testTweetersName {
+    Tweet *tweet = [[Tweet alloc] initWithTweet:_tweetDict];
+    XCTAssert([tweet.tweeterName isEqualToString:@"@TonyBalony"], @"Pass");
+}
+
+- (void)testTweetersImage {
 }
 
 @end

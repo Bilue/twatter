@@ -11,9 +11,11 @@
 #import "Tweet.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
+#import <SDWebImage/UIImageView+WebCache.h>
+#import <MBProgressHUD/MBProgressHUD.h>
+#import "AppDelegate.h"
 
 @interface MasterViewController ()
-
 @property NSMutableArray *objects;
 @end
 
@@ -30,40 +32,40 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeTweet:)];
     self.navigationItem.rightBarButtonItem = addButton;
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
-    ACAccountStore *accountStore = [[ACAccountStore alloc] init];
-    ACAccountType *accountType = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-    
-    [accountStore requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error){
-        if (granted) {
-            
-            NSArray *accounts = [accountStore accountsWithAccountType:accountType];
-            
-            // Check if the users has setup at least one Twitter account
-            
-            if (accounts.count > 0)
-            {
-                ACAccount *twitterAccount = [accounts objectAtIndex:0];
-                
-                // Creating a request to get the info about a user on Twitter
-                
-                NSURL *timelineURL = [NSURL URLWithString:@"https://api.twitter.com/1.1/statuses/user_timeline.json"];
-                SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:timelineURL parameters:@{@"count" : @200}];
-                twitterInfoRequest.account = twitterAccount;
-                
-                // Making the request
-                
-                [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-                    // Why would we possible need to do this???
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-                    
+    NSTimeInterval timer = 15.f;
+    [NSTimer scheduledTimerWithTimeInterval:15.f target:self selector:@selector(checkTweets:) userInfo:nil repeats:YES];
+}
 
-                        NSLog(@"%@", [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
+ - (void)checkTweets:(NSTimer *)timer {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+    [[THEAPPDELEGATE accountStore] requestAccessToAccountsWithType:[THEAPPDELEGATE accountType] options:nil completion:^(BOOL granted, NSError *error){
+            if (granted) {
+                
+                NSArray *accounts = [[THEAPPDELEGATE accountStore] accountsWithAccountType:[THEAPPDELEGATE accountType]];
+                
+                // Check if the users has setup at least one Twitter account
+                
+                if (accounts.count > 0)
+                {
+                    ACAccount *twitterAccount = [accounts objectAtIndex:0];
                     
+                    // Creating a request to get the info about a user on Twitter
+                    
+                    NSURL *timelineURL = [NSURL URLWithString:@"https://api.twitter.com/1.1/statuses/user_timeline.json"];
+                    SLRequest *twitterInfoRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:timelineURL parameters:@{@"count" : @200}];
+                    twitterInfoRequest.account = twitterAccount;
+                    
+                    // Making the request
+                    [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+//                      [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        [MBProgressHUD hideHUDForView:self.view animated:YES];
+                        NSLog(@"%@", [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
+                        
                         // Check if we reached the reate limit
                         if ([urlResponse statusCode] == 429) {
                             NSLog(@"Rate limit reached");
@@ -80,11 +82,13 @@
                         // Check if there is some response data
                         
                         if (responseData) {
-                            
                             NSError *error = nil;
                             NSArray *TWData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&error];
-                            
                             NSLog(@"%@", [TWData lastObject]);
+
+                            NSString *screen_name = [(NSDictionary *)TWData[0] objectForKey:@"screen_name"];
+                            NSString *tweet = [(NSDictionary *)TWData objectForKey:@"text"];
+                            
                             self.objects = [NSMutableArray arrayWithCapacity:200];
                             for (NSDictionary *tweetDict in TWData) {
                                 [self.objects addObject:[[Tweet alloc] initWithTweet:tweetDict]];
@@ -92,47 +96,47 @@
                             [self.tableView reloadData];
                             // Filter the preferred data
                             
-//                            NSString *screen_name = [(NSDictionary *)TWData objectForKey:@"screen_name"];
-//                            NSString *name = [(NSDictionary *)TWData objectForKey:@"name"];
-//                            
-//                            int followers = [[(NSDictionary *)TWData objectForKey:@"followers_count"] integerValue];
-//                            int following = [[(NSDictionary *)TWData objectForKey:@"friends_count"] integerValue];
-//                            int tweets = [[(NSDictionary *)TWData objectForKey:@"statuses_count"] integerValue];
-//                            
-//                            NSString *profileImageStringURL = [(NSDictionary *)TWData objectForKey:@"profile_image_url_https"];
-//                            NSString *bannerImageStringURL =[(NSDictionary *)TWData objectForKey:@"profile_banner_url"];
+
+                            //                            NSString *name = [(NSDictionary *)TWData objectForKey:@"name"];
+                            //
+                            //                            int followers = [[(NSDictionary *)TWData objectForKey:@"followers_count"] integerValue];
+                            //                            int following = [[(NSDictionary *)TWData objectForKey:@"friends_count"] integerValue];
+                            //                            int tweets = [[(NSDictionary *)TWData objectForKey:@"statuses_count"] integerValue];
+                            //
+                            //                            NSString *profileImageStringURL = [(NSDictionary *)TWData objectForKey:@"profile_image_url_https"];
+                            //                            NSString *bannerImageStringURL =[(NSDictionary *)TWData objectForKey:@"profile_banner_url"];
                             
                             
                             // Update the interface with the loaded data
                             
-//                            nameLabel.text = name;
-//                            usernameLabel.text= [NSString stringWithFormat:@"@%@",screen_name];
-//                            
-//                            tweetsLabel.text = [NSString stringWithFormat:@"%i", tweets];
-//                            followingLabel.text= [NSString stringWithFormat:@"%i", following];
-//                            followersLabel.text = [NSString stringWithFormat:@"%i", followers];
-//                            
-//                            NSString *lastTweet = [[(NSDictionary *)TWData objectForKey:@"status"] objectForKey:@"text"];
-//                            lastTweetTextView.text= lastTweet;
+                            //                            nameLabel.text = name;
+                            //                            usernameLabel.text= [NSString stringWithFormat:@"@%@",screen_name];
+                            //
+                            //                            tweetsLabel.text = [NSString stringWithFormat:@"%i", tweets];
+                            //                            followingLabel.text= [NSString stringWithFormat:@"%i", following];
+                            //                            followersLabel.text = [NSString stringWithFormat:@"%i", followers];
+                            //
+                            //                            NSString *lastTweet = [[(NSDictionary *)TWData objectForKey:@"status"] objectForKey:@"text"];
+                            //                            lastTweetTextView.text= lastTweet;
                             
                             
                             
                             // Get the profile image in the original resolution
                             
-//                            profileImageStringURL = [profileImageStringURL stringByReplacingOccurrencesOfString:@"_normal" withString:@""];
-//                            [self getProfileImageForURLString:profileImageStringURL];
+                            //                            profileImageStringURL = [profileImageStringURL stringByReplacingOccurrencesOfString:@"_normal" withString:@""];
+                            //                            [self getProfileImageForURLString:profileImageStringURL];
                             
                             
                             // Get the banner image, if the user has one
                             
-//                            if (bannerImageStringURL) {
-//                                NSString *bannerURLString = [NSString stringWithFormat:@"%@/mobile_retina", bannerImageStringURL];
-//                                [self getBannerImageForURLString:bannerURLString];
-//                            } else {
-//                                bannerImageView.backgroundColor = [UIColor underPageBackgroundColor];
-//                            }
+                            //                            if (bannerImageStringURL) {
+                            //                                NSString *bannerURLString = [NSString stringWithFormat:@"%@/mobile_retina", bannerImageStringURL];
+                            //                                [self getBannerImageForURLString:bannerURLString];
+                            //                            } else {
+                            //                                bannerImageView.backgroundColor = [UIColor underPageBackgroundColor];
+                            //                            }
                         }
-//                    });
+//                    }];
                 }];
             }
         } else {
@@ -199,7 +203,10 @@
 
     Tweet *object = self.objects[indexPath.row];
     cell.textLabel.text = object.message;
-    cell.imageView
+    cell.detailTextLabel.text = object.tweeterName;
+    [cell.imageView sd_setImageWithURL:object.tweeterImage placeholderImage:[THEAPPDELEGATE placeholderImage]];
+    [cell.imageView.layer setCornerRadius:5.f];
+    cell.imageView.clipsToBounds = YES;
     return cell;
 }
 

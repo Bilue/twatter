@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 #import "DetailViewController.h"
-#import <Social/Social.h>
+#import <Accounts/Accounts.h>
 
 @interface AppDelegate () <UISplitViewControllerDelegate>
 
@@ -18,12 +18,22 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    self.placeholderImage = [UIImage imageNamed:@"Screen Shot 2014-10-06 at 3.33.42 pm.png"];
+    _accountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    
     // Override point for customization after application launch.
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
     navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
     splitViewController.delegate = self;
     return YES;
+}
+
+- (ACAccountStore *)accountStore {
+    if (_accountStore == nil) {
+        _accountStore = [[ACAccountStore alloc] init];
+    }
+    return _accountStore;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

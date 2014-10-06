@@ -20,4 +20,5 @@ Please fork, branch, fix and submit a pull request.
 - Single Responsiblity Principle
 - Test Driven Development
 - We prefer Expecta over XCTest
+- Project structure
 - General good coding practices

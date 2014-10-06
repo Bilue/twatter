@@ -52,6 +52,7 @@
 		54ECF09019E23D0E002B01B6 /* Tweet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tweet.m; sourceTree = "<group>"; };
 		54ECF09219E2402B002B01B6 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		54ECF09419E24032002B01B6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		54ECF09619E24F28002B01B6 /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +79,7 @@
 		54892BE819D8D92200EDC88E = {
 			isa = PBXGroup;
 			children = (
+				54ECF09619E24F28002B01B6 /* Podfile */,
 				54ECF09419E24032002B01B6 /* QuartzCore.framework */,
 				54ECF09219E2402B002B01B6 /* Accounts.framework */,
 				54ECF08D19E23C68002B01B6 /* Social.framework */,

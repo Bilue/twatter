@@ -84,7 +84,7 @@
                             NSError *error = nil;
                             NSArray *TWData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&error];
                             
-                            NSLog(@"\n\n\n%@", [TWData lastObject]);
+                            NSLog(@"%@", [TWData lastObject]);
                             self.objects = [NSMutableArray arrayWithCapacity:200];
                             for (NSDictionary *tweetDict in TWData) {
                                 [self.objects addObject:[[Tweet alloc] initWithTweet:tweetDict]];
@@ -199,6 +199,7 @@
 
     Tweet *object = self.objects[indexPath.row];
     cell.textLabel.text = object.message;
+    cell.imageView
     return cell;
 }
 

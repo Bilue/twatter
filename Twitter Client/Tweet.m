@@ -12,10 +12,9 @@
 
 - (instancetype)initWithTweet:(NSDictionary *)tweet {
     if (self = [super init]) {
-        self.message = @"A tweet message from the dictionary";
-        self.date    = [NSDate date];
-        self.tweeterName = @"whalec";
-        self.tweeterImage = [NSURL URLWithString:@"https://pbs.twimg.com/profile_images/458746713629401088/T069aCrN_normal.jpeg"];
+        self.message = tweet[@"text"];
+        self.tweeterName = tweet[@"user"][@"screen_name"];
+        self.tweeterImage = [NSURL URLWithString:tweet[@"user"][@"profile_image_url"]];
     }
 
     return self;

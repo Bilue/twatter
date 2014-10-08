@@ -36,12 +36,23 @@
     self.navigationItem.rightBarButtonItem = addButton;
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
+    [self checkTweets:nil];
     NSTimeInterval timer = 15.f;
-    [NSTimer scheduledTimerWithTimeInterval:15.f target:self selector:@selector(checkTweets:) userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:timer target:self selector:@selector(checkTweets:) userInfo:nil repeats:YES];
+    
+    [self setupRefeshControl];
+}
+
+- (void) setupRefeshControl
+{
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    refreshControl.tintColor = [UIColor blackColor];
+    [refreshControl addTarget:self action:@selector(checkTweets:) forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
 }
 
  - (void)checkTweets:(NSTimer *)timer {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
     [[THEAPPDELEGATE accountStore] requestAccessToAccountsWithType:[THEAPPDELEGATE accountType] options:nil completion:^(BOOL granted, NSError *error){
             if (granted) {
@@ -62,8 +73,9 @@
                     
                     // Making the request
                     [twitterInfoRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-//                      [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                      [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                         [MBProgressHUD hideHUDForView:self.view animated:YES];
+                        [self.refreshControl endRefreshing];  
                         NSLog(@"%@", [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding]);
                         
                         // Check if we reached the reate limit
@@ -86,8 +98,8 @@
                             NSArray *TWData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&error];
                             NSLog(@"%@", [TWData lastObject]);
 
-                            NSString *screen_name = [(NSDictionary *)TWData[0] objectForKey:@"screen_name"];
-                            NSString *tweet = [(NSDictionary *)TWData objectForKey:@"text"];
+                            //NSString *screen_name = [(NSDictionary *)TWData[0] objectForKey:@"screen_name"];
+                            //NSString *tweet = [(NSDictionary *)TWData objectForKey:@"text"];
                             
                             self.objects = [NSMutableArray arrayWithCapacity:200];
                             for (NSDictionary *tweetDict in TWData) {
@@ -136,7 +148,7 @@
                             //                                bannerImageView.backgroundColor = [UIColor underPageBackgroundColor];
                             //                            }
                         }
-//                    }];
+                    }];
                 }];
             }
         } else {

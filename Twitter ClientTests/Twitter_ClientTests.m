@@ -18,7 +18,10 @@
 
 - (void)setUp {
     [super setUp];
-    _tweetDict = @{@"user" : @{@"screen_name" : @"@TonyBalony"}, @"text" : @"Blag blag blag", @"created_at" : @"Thu Oct 02 08:26:48 +0000 2014"};
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"EEE MMM dd HH:mm:ss ZZZ yyyy"];
+    NSDate *date = [dateFormatter dateFromString:@"Thu Oct 02 08:26:48 +0000 2014"];
+    _tweetDict = @{@"user" : @{@"screen_name" : @"@TonyBalony", @"profile_image_url" : @"http://goo.gl/lu4dxT"}, @"text" : @"Blag blag blag", @"created_at" : date};
 }
 
 - (void)tearDown {
@@ -52,6 +55,9 @@
 }
 
 - (void)testTweetersImage {
+    Tweet *tweet = [[Tweet alloc] initWithTweet:_tweetDict];
+    NSURL *url = [NSURL URLWithString:@"http://goo.gl/lu4dxT"];
+    XCTAssert([tweet.tweeterImage isEqual:url], @"Pass");
 }
 
 @end

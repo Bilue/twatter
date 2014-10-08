@@ -13,7 +13,7 @@
 - (instancetype)initWithTweet:(NSDictionary *)tweet {
     if ((self = [super init])) {
         self.message = tweet[@"text"];
-        self.date = [NSDate date];
+        self.date = tweet[@"created_at"];
         self.tweeterName = tweet[@"user"][@"screen_name"];
         self.tweeterImage = [NSURL URLWithString:tweet[@"user"][@"profile_image_url"]];
     }
